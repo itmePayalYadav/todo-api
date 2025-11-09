@@ -4,7 +4,6 @@ from decouple import Config, RepositoryEnv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Detect environment: "local" or "production"
 ENV = os.getenv('DJANGO_ENV', 'local')
 
 # Choose env file
@@ -28,7 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    'todo'
+    'todo',
+    'library'
 ]
 
 MIDDLEWARE = [
