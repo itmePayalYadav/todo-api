@@ -10,27 +10,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ----------------------------
 ENV = os.getenv("ENV", "local")
 
-if ENV == "local":
-    env_file = BASE_DIR / ".env.local"
-    if env_file.exists():
-        from decouple import Config, RepositoryEnv
-        config = Config(RepositoryEnv(env_file))
-    else:
-        config = env_config
+# Determine env file for local development
+env_file = BASE_DIR / ".env.local" if ENV == "local" else BASE_DIR / ".env"
+
+# Load environment variables
+if env_file.exists():
+    config = Config(RepositoryEnv(env_file))
 else:
-    config = env_config
+    # Fallback to system environment variables
+    config = Config(os.environ)
 
 # ----------------------------
 # SECURITY
 # ----------------------------
 SECRET_KEY = config("SECRET_KEY")
-
 DEBUG = ENV == "local"
 
-if ENV == "local":
-    ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1").split(",")
-else:
-    ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*").split(",")
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    default="localhost,127.0.0.1" if DEBUG else "*"
+).split(",")
 
 # ----------------------------
 # INSTALLED APPS
