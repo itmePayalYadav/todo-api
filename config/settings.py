@@ -10,12 +10,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ----------------------------
 ENV = os.getenv("ENV", "local")
 
-if ENV == "production":
-    env_file = BASE_DIR / ".env"
-else:
+if ENV == "local":
     env_file = BASE_DIR / ".env.local"
-
-config = Config(RepositoryEnv(env_file))
+    if env_file.exists():
+        from decouple import Config, RepositoryEnv
+        config = Config(RepositoryEnv(env_file))
+    else:
+        config = env_config
+else:
+    config = env_config
 
 # ----------------------------
 # SECURITY
